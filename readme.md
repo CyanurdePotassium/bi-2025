@@ -16,6 +16,7 @@
 ## Projekt
 
 -   [Szablon projektu](zaliczenie/szablon.qmd)
+-   [Przykład raportu](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bi-2025/blob/main/zaliczenie/projekt-przyklad.html)
 
 ## Opis zbioru danych
 
