@@ -2,7 +2,7 @@
 
 ## Sylabus i materiały
 
-0.  [pakiety `sampling`, `survey` w R i `samplics` w Python](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bo-2025/blob/main/notebooks/00-survey.html))
+0.  [pakiety `sampling`, `survey` w R i `samplics` w Python](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bi-2025/blob/main/notebooks/00-survey.html))
 1.  Internet w Polsce
 2.  Google Trends
 3.  Web-scraping i API
