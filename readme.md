@@ -2,6 +2,7 @@
 
 ## Sylabus i materiały
 
+0.  [pakiety `sampling`, `survey` w R i `samplics` w Python]()
 1.  Internet w Polsce
 2.  Google Trends
 3.  Web-scraping i API
