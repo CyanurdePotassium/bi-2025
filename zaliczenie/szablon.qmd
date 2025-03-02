@@ -21,7 +21,8 @@ lang: pl
 
 ## Wprowadzenie
 
--   zwięzły opis projektu dotyczący wyboru estymatorów oraz opis danych
+-   zwięzły opis projektu dotyczący wyboru danych oraz estimatorów
+
 
 ## Symulacja
 
@@ -30,8 +31,7 @@ lang: pl
 -   zwięzły opis symulacji, jak były generowane dane, może być w postaci pseudokodu np.
 
 1.  ustalono wielkość próby losowej na $n_a=1000$ i próby nielosowej na $n_b=5000$,
-2.  wygenerowano zmienną $X_1 \sim (0,1)$ oraz $X_2 \sim \chi(2)$
-3.  wygenerowano zmienną/e $Y$ zgodnie z poniższym wzorem
+2.  jaką zmienną celu ustalono, a może ją wygenerowano na podstawie zbioru danych? 
 
 $$
 Y = \beta_1 + \beta_2 X_1 + \beta_3 X_3 + \epsilon; \quad \epsilon \sim N(0,1)
