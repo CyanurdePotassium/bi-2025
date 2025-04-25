@@ -129,13 +129,23 @@ check_balance(~size-1,ipw_est1)
 check_balance(~size-1,ipw_est2)
 ```
 
-Porównanie rozkładow
+Porównanie rozkładow: model 1
 
 ```{r}
-ipw_est1_comp <- as.weightit(x = 1/ipw_est2$ps_scores,
-                             treat = ipw_est2$R,
+ipw_est1_comp <- as.weightit(x = 1/ipw_est1$ps_scores,
+                             treat = ipw_est1$R,
                              covs = rbind(admin[, c("nace", "region", "size", "private")],
                                           jvs[, c("nace", "region", "size", "private")]))
 bal.tab(ipw_est1_comp, un = T) |> plot()
 ```
 
+
+Porównanie rozkładow: model 2
+
+```{r}
+ipw_est2_comp <- as.weightit(x = 1/ipw_est2$ps_scores,
+                             treat = ipw_est2$R,
+                             covs = rbind(admin[, c("nace", "region", "size", "private")],
+                                          jvs[, c("nace", "region", "size", "private")]))
+bal.tab(ipw_est2_comp, un = T) |> plot()
+```
