@@ -9,6 +9,8 @@
 4.  Dobór próby w badaniach internetowych
 5.  Reprezentatywność
 6.  Metody quasi-randomizacyjne
+    - [Porównywanie rozkładów](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bi-2025/blob/main/notebooks/05-porownywanie-rozkladow.html)
+    - [Wstęp do IPW]()
 7.  Model oparte na modelu
 8.  Metody podwójnie odporne
 9.  Inne metody estymacji

@@ -5,7 +5,7 @@ format:
     self-contained: true
     table-of-contents: true
     number-sections: true
-editor: visual
+editor: source
 execute: 
   eval: true
   warning: false
@@ -28,8 +28,8 @@ dane <- read_csv("../data/popyt-zajecia-dane.csv") |>
 ```{r}
 head(dane) |> kable()
 ```
+
 ```{r}
 bal.tab(flag ~ sek + klasa_pr + sekc_pkd + zawod_kod2, data = dane, weights = dane$waga_f) |>
   plot()
 ```
-

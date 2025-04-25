@@ -1,0 +1,71 @@
+---
+title: "Wstęp do IPW"
+format: 
+  html:
+    self-contained: true
+    table-of-contents: true
+    number-sections: true
+editor: source
+execute: 
+  eval: true
+  warning: false
+  message: false
+---
+
+```{r}
+library(nonprobsvy) ## wersja 0.2.1
+library(cobalt)
+library(WeightIt)
+```
+
+```{r}
+data(admin)
+data(jvs)
+```
+
+```{r}
+jvs_svy <- svydesign(ids = ~ 1,  weights = ~ weight,
+                     strata = ~ size + nace + region, data = jvs)
+```
+
+Przykład 1 
+```{r}
+ipw_est1 <- nonprob(selection = ~ nace + size,
+                    target = ~ single_shift,
+                    svydesign = jvs_svy,
+                    data = admin, 
+                    method_selection = "logit")
+
+ipw_est1
+```
+
+```{r}
+plot(ipw_est1)
+```
+
+```{r}
+summary(ipw_est1)
+```
+
+```{r}
+extract(ipw_est1)
+```
+
+```{r}
+weights(ipw_est1) |> summary()
+```
+
+```{r}
+check_balance(~size-1, ipw_est1)
+```
+
+Porównanie rozkładow
+
+```{r}
+ipw_est1_comp <- as.weightit(x = 1/ipw_est1$ps_scores,
+                             treat = ipw_est1$R,
+                             covs = rbind(admin[, c("nace", "region", "size", "private")],
+                                          jvs[, c("nace", "region", "size", "private")]))
+bal.tab(ipw_est1_comp)
+```
+
