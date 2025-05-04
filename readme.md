@@ -10,7 +10,8 @@
 5.  Reprezentatywność
 6.  Metody quasi-randomizacyjne
     - [Porównywanie rozkładów](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bi-2025/blob/main/notebooks/05-porownywanie-rozkladow.html)
-    - [Wstęp do IPW]()
+    - [Wstęp do IPW](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bi-2025/blob/main/notebooks/06-ipw-1.html)
+    - [Kalibrowany estymator IPW](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bi-2025/blob/main/notebooks/06-ipw-2.html)
 7.  Model oparte na modelu
 8.  Metody podwójnie odporne
 9.  Inne metody estymacji
