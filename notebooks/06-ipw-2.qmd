@@ -29,9 +29,9 @@ head(jvs)
 ```
 
 ```{r}
-jvs_svy <- svydesign(ids = ~ 1,  
+jvs_svy <- svydesign(ids = ~ 1,
                      weights = ~ weight,
-                     strata = ~ size + nace + region, 
+                     strata = ~ size + nace + region,
                      data = jvs)
 ```
 
@@ -95,7 +95,7 @@ ipw_gee <- nonprob(selection = ~ size,         ## P(R_1 = 1 | ...)
                     svydesign = jvs_svy,        ## proba losowa S_B
                     data = admin,               ## proba nielosowa S_A
                     method_selection = "logit", ## regresja logistyczna / probit / cloglog
-                    control_selection = control_sel(est_method = "gee")) 
+                    control_selection = control_sel(est_method = "gee")) ## dzięki gee, wagi odtwarzają rozkład z próby (kalibrowany ipw)
 
 ipw_gee
 ```
@@ -113,6 +113,59 @@ coef(ipw_mle)
 ```{r}
 coef(ipw_gee)
 ```
+
+Ćw. 1. 
+Zastąpienie zmiennej size inną zmienną (nace lub region), porównanie wyników.
+
+$$
+P(R_A = 1 | region)
+$$
+```{r}
+
+ipw_mle_region <- nonprob(selection = ~ region,
+                          target = ~ single_shift,
+                          svydesign = jvs_svy,
+                          data = admin,
+                          method_selection = "logit")
+
+ipw_gee_region <- nonprob(selection = ~ region,
+                          target = ~ single_shift,
+                          svydesign = jvs_svy,
+                          data = admin,
+                          method_selection = "logit",
+                          control_selection = control_sel(est_method="gee"))
+```
+
+To samo, co wyżej:
+```{r}
+ipw_mle_region <- update(ipw_mle, selection = ~ region)
+ipw_gee_region <- update(ipw_gee, selection = ~ region)
+```
+
+```{r}
+ipw_mle_region
+ipw_gee_region
+```
+
+```{r}
+summary(weights(ipw_mle_region))
+summary(weights(ipw_gee_region))
+```
+
+```{r}
+rbind(
+  extract(ipw_mle_region),
+  extract(ipw_gee_region)
+)
+```
+
+```{r}
+check_balance(~size-1, ipw_mle_region)
+check_balance(~size-1, ipw_gee_region)
+```
+
+
+
 
 Przykład 2:
 
@@ -172,9 +225,58 @@ summary(weights(ipw_gee2))
 Metoda GEE zapewnia zgodność rozkładów
 
 ```{r}
-check_balance(~size-1,ipw_mle2)
-check_balance(~size-1,ipw_gee2)
+check_balance(~size-1,ipw_mle2)$balance
+check_balance(~size-1,ipw_gee2)$balance
 ```
+Ćw. 2.
+Size i private oraz ich interakcja
+oszacowanie parametrów
+porównanie wyników
+rozkłady wag
+
+$$
+P(R_A = 1 | size, private, size+private)
+$$
+
+```{r}
+
+ipw_mle3 <- nonprob(selection = ~ size + private + size * private,
+                    target = ~ single_shift,
+                    svydesign = jvs_svy,
+                    data = admin,
+                    method_selection = "logit")
+
+ipw_gee3 <- nonprob(selection = ~ size + private + size * private,
+                    target = ~ single_shift,
+                    svydesign = jvs_svy,
+                    data = admin,
+                    method_selection = "logit",
+                    control_selection = control_sel(est_method = "gee"))
+
+```
+
+```{r}
+ipw_mle3
+ipw_gee3
+```
+
+```{r}
+coef(ipw_mle3)
+coef(ipw_gee3)
+```
+
+```{r}
+summary(weights(ipw_mle3))
+summary(weights(ipw_gee3))
+```
+
+```{r}
+plot(x = weights(ipw_mle3),
+     y = weights(ipw_gee3),
+     xlab = "Wagi IPW", ylab = "Wagi GEE")
+```
+
+
 
 Przykład 3: znamy tylko wartości globalne
 
