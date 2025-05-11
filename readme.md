@@ -13,6 +13,8 @@
     - [Wstęp do IPW](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bi-2025/blob/main/notebooks/06-ipw-1.html)
     - [Kalibrowany estymator IPW](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bi-2025/blob/main/notebooks/06-ipw-2.html)
 7.  Model oparte na modelu
+    - [Masowa imputacja z wykorzystaniem najbliższych sąsiadów](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bi-2025/blob/main/notebooks/07-mi-nn.html)
+    - [Masowa imputacja z wykorzystaniem GLM]()
 8.  Metody podwójnie odporne
 9.  Inne metody estymacji
 
