@@ -54,14 +54,27 @@ mi_nn2 <- nonprob(data = admin,
                  outcome = single_shift ~ size,
                  svydesign = jvs_svy,
                  method_outcome = "nn",
-                 family_outcome = "binomial",
-                 control_outcome = control_out(k = 1))
+                 control_outcome = control_out(k = 5))
 mi_nn2
 ```
 
 Ćwiczenie:
 
 - proszę dodać kolejne zmienne i sprawdzić jak zmieni sie wynik
+
+```{r}
+mi_nn3 <- nonprob(data = admin,
+                 outcome = single_shift ~ size + private + nace + region,
+                 svydesign = jvs_svy,
+                 method_outcome = "nn",
+                 control_outcome = control_out(k = 5))
+```
+
+```{r}
+mi_nn2
+mi_nn3
+```
+
 
 Przykład 2: wyszukiwanie najbliższego sąsiada po wartościach przewidywanych
 
@@ -81,11 +94,31 @@ mi_pmm2 <- nonprob(data = admin,
                  method_outcome = "pmm",
                  se = FALSE,
                  family_outcome = "binomial",
-                 control_outcome = control_out(k = 1))
-mi_pmm2
+                 control_outcome = control_out(k = 5))
+mi_pmm2 # prawdopodobieństwo, że przedsiębiorstwo ma wakat na jedną zmianę (przy określonym rozmiarze)
 ```
 
 Ćwiczenie:
 
 - proszę dodać kolejne zmienne i sprawdzić jak zmieni sie wynik
+
+```{r}
+mi_pmm3 <- nonprob(data = admin,
+                 outcome = single_shift ~ size + private + nace + region,
+                 svydesign = jvs_svy,
+                 method_outcome = "pmm",
+                 se = FALSE,
+                 family_outcome = "binomial",
+                 control_outcome = control_out(k = 5))
+```
+
+```{r}
+mi_pmm2
+mi_pmm3
+```
+
+```{r}
+mi_nn3
+mi_pmm3
+```
 
