@@ -1,0 +1,66 @@
+---
+title: "Kalibrowany estymator IPW"
+format: 
+  html:
+    self-contained: true
+    table-of-contents: true
+    number-sections: true
+editor: source
+execute: 
+  eval: true
+  warning: false
+  message: false
+---
+
+```{r}
+library(nonprobsvy) ## wersja 0.2.1
+```
+
+```{r}
+data(admin) ## próba nielosowa (S_A)
+head(admin)
+```
+
+```{r}
+data(jvs) ## próba losowa (S_B)
+head(jvs)
+```
+
+```{r}
+jvs_svy <- svydesign(ids = ~ 1,  
+                     weights = ~ weight,
+                     strata = ~ size + nace + region, 
+                     data = jvs)
+```
+
++ 1 źródło: próba nielosowa S_A (dane z CBOP)
++ 2 źródło: próba losowa S_B (dane z badania popyt na pracę)
+
+
+Przykład 1: masowa imputacja z modelem regresji liniowej
+
+```{r}
+mi_glm <- nonprob(data = admin,
+                 outcome = single_shift ~ size,
+                 svydesign = jvs_svy,
+                 method_outcome = "glm")
+mi_glm
+```
+
+Przykład 2: masowa imputacja z modelem regresji logistycznej
+
+```{r}
+mi_glm2 <- nonprob(data = admin,
+                 outcome = single_shift ~ size,
+                 svydesign = jvs_svy,
+                 method_outcome = "glm",
+                 family_outcome = "binomial")
+mi_glm2
+```
+
+Ćwiczenie:
+
+- proszę dodać kolejne zmienne i sprawdzić jak zmieni sie wynik
+
+
+
