@@ -44,7 +44,8 @@ mi_glm <- nonprob(data = admin,
                  outcome = single_shift ~ size,
                  svydesign = jvs_svy,
                  method_outcome = "glm")
-mi_glm
+
+mi_glm #odsetek przedsiębiorstw mających wakat
 ```
 
 Przykład 2: masowa imputacja z modelem regresji logistycznej
@@ -55,12 +56,52 @@ mi_glm2 <- nonprob(data = admin,
                  svydesign = jvs_svy,
                  method_outcome = "glm",
                  family_outcome = "binomial")
-mi_glm2
+
+mi_glm2 #prawdopodobieństwo wakatu w przedsiębiorstwie
 ```
+
+```{r}
+
+mi_glm2$ys_rand_pred[[1]] |> head()
+mi_glm2$ys_rand_pred[[1]] |> NROW()
+
+```
+
 
 Ćwiczenie:
 
 - proszę dodać kolejne zmienne i sprawdzić jak zmieni sie wynik
 
+```{r}
 
+mi_glm3 <- nonprob(data = admin,
+                 outcome = single_shift ~ size + private,
+                 svydesign = jvs_svy,
+                 method_outcome = "glm")
+```
 
+```{r}
+
+mi_glm4 <- nonprob(data = admin,
+                 outcome = single_shift ~ size + private,
+                 svydesign = jvs_svy,
+                 method_outcome = "glm",
+                 family_outcome = "binomial")
+
+```
+
+```{r}
+
+mi_glm3
+mi_glm4
+
+```
+
+```{r}
+
+rbind(
+  extract(mi_glm3),
+  extract(mi_glm4)
+)
+
+```

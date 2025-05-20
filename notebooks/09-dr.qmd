@@ -37,12 +37,28 @@ jvs_svy <- svydesign(ids = ~ 1,
 + 2 źródło: próba losowa S_B (dane z badania popyt na pracę)
 
 
+```{r}
+
+nonprob(data = admin,
+               outcome = single_shift ~ size + nace,
+               selection = ~ size + nace,
+               target = ~single_shift,
+               svydesign = jvs_svy,
+               method_outcome = "glm")
+
+# outcome i selection - Double Robust Estimator
+# outcome - Nearest Neighbor
+# selection i target - Inclusion Probability Weighting
+
+```
+
+
 Przykład 1: doubly robust estimator z regresją liniową 
 
 ```{r}
 mi_dr <- nonprob(data = admin,
-                 outcome = single_shift ~ size + nace,
-                 selection = ~ size + nace,
+                 outcome = single_shift ~ size + nace, # część modelowa
+                 selection = ~ size + nace, # prawdopodobieństwo inkluzji (dla korekty)
                  svydesign = jvs_svy,
                  method_outcome = "glm")
 mi_dr
@@ -64,5 +80,94 @@ mi_dr2
 
 - proszę dodać kolejne zmienne i sprawdzić jak zmieni sie wynik
 
+```{r}
+
+mi_dr_1 <- nonprob(data = admin,
+                 outcome = single_shift ~ size*private+region+nace,
+                 selection = ~ size*private+region+nace,
+                 svydesign = jvs_svy,
+                 method_outcome = "glm")
+
+```
+
+```{r}
+
+mi_dr2_1 <- nonprob(data = admin,
+                 outcome = single_shift ~ size*private+region+nace,
+                 selection = ~ size*private+region+nace,
+                 svydesign = jvs_svy,
+                 method_outcome = "glm",
+                 family_outcome = "binomial")
+
+```
+
+```{r}
+
+mi_dr_2 <- nonprob(data = admin,
+                 outcome = single_shift ~ size+nace+private,
+                 selection = ~ size+nace+private,
+                 svydesign = jvs_svy,
+                 method_outcome = "glm")
+
+```
+
+```{r}
+
+mi_dr2_2 <- nonprob(data = admin,
+                 outcome = single_shift ~ size+nace+private,
+                 selection = ~ size+nace+private,
+                 svydesign = jvs_svy,
+                 method_outcome = "glm",
+                 family_outcome = "binomial")
+
+```
+
+```{r}
+
+rbind(
+  extract(mi_dr_1),
+  extract(mi_dr2_1),
+  extract(mi_dr_2),
+  extract(mi_dr2_2)
+)
+
+```
+
+Dobór zmiennych metodą SCAD (wybranie istotnych POZIOMÓW zmiennych w przeciwieństwie do LASSO, gdzie wybiera się istotne ZMIENNE).
+```{r}
+
+mi_glm_cv <- nonprob(data = admin,
+                 outcome = single_shift ~ size+private+nace+region,
+                 svydesign = jvs_svy,
+                 method_outcome = "glm",
+                 family_outcome = "binomial",
+                 control_inference = control_inf(vars_selection = T),
+                 verbose = T)
+
+```
+
+```{r}
+
+coef(mi_glm_cv)
+
+```
+
+
+```{r}
+
+mi_glm <- nonprob(data = admin,
+                 outcome = single_shift ~ size+private+nace+region,
+                 svydesign = jvs_svy,
+                 method_outcome = "glm",
+                 family_outcome = "binomial")
+
+```
+
+```{r}
+
+mi_glm_cv
+mi_glm
+
+```
 
 
