@@ -1,0 +1,221 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+1. Wczytanie danych z pliku case-study.xlsx.
+
+2. Deklaracja typów zmiennych (por. arkusze "opis cech" i "opis wariantów cech").
+
+3. Deklaracja schematu losowania (obiektu typu svydesign) na podstawie zbioru z arkusza "proba-losowa".
+
+4. Porównanie rozkładów według zmiennych woj, klm, los oraz innych zmiennych (np. dochg) między próbą losową a nielosową.
+
+5. Identyfikacja zmiennych, które mogą być związane z doborem próby nielosowej oraz zmienną celu (wydg).
+
+Oszacowanie średnich wydatków korzystając z różnych estymatorów:
+IPW
+MI
+DR
+
+```{r}
+
+library(readxl)
+library(nonprobsvy)
+
+```
+
+Arkusze
+```{r}
+
+excel_sheets("data/case-study.xlsx")
+
+```
+
+
+```{r}
+
+# PODZIELIĆ DOCHG NA GRUPY NP(0-500, 1000-2000)
+random_sample <- read_excel("data/case-study.xlsx", sheet="proba-losowa")
+random_sample$woj <- as.factor(random_sample$woj)
+non_random_sample <- read_excel("data/case-study.xlsx", sheet="proba-nielosowa")
+non_random_sample$woj <- as.factor(non_random_sample$woj)
+
+```
+
+```{r}
+
+head(random_sample)
+head(non_random_sample)
+
+```
+
+
+```{r}
+
+random_sample$dochg_gr <- cut(random_sample$dochg, breaks = c(0, 1000, 2000, 3000, 4000, 38881.9), labels = c("0-1000", "1000-2000", "2000-3000", "3000-4000", "+4000"))
+
+non_random_sample$dochg_gr <- cut(non_random_sample$dochg, breaks = c(0, 1000, 2000, 3000, 4000, 38881.9), labels = c("0-1000", "1000-2000", "2000-3000", "3000-4000", "+4000"))
+
+jvs_svy <- svydesign(ids = ~ 1,  
+                     weights = ~ weight,
+                     strata = ~ warstwa,
+                     data = random_sample)
+
+```
+
+```{r}
+
+head(random_sample)
+head(non_random_sample)
+
+```
+
+```{r}
+
+levels(random_sample$dochg_gr)
+
+```
+
+
+
+Porównanie woj
+```{r}
+
+plot(random_sample$woj)
+plot(non_random_sample$woj)
+
+```
+
+```{r}
+rbind(
+  summary(non_random_sample$dochg),
+  summary(random_sample$dochg)
+)
+```
+
+
+dochg a wydg
+```{r}
+
+plot(non_random_sample$wydg, non_random_sample$dochg)
+plot(log(non_random_sample$wydg+21500), log(non_random_sample$dochg+21500))
+
+```
+
+
+Porównanie klm
+```{r}
+
+hist(random_sample$klm, col=rgb(0,0,1,1/4)) # czerwony
+hist(non_random_sample$klm, col=rgb(1,0,0,1/4), add=TRUE)
+
+```
+Porównanie los
+```{r}
+
+hist(random_sample$los, col=rgb(0,0,1,1/4), ylim=c(0,6000)) # czerwony
+hist(non_random_sample$los, col=rgb(1,0,0,1/4), ylim=c(0,6000), add=TRUE)
+
+
+```
+
+
+Porównanie dochg
+```{r}
+
+hist(random_sample$dochg, col=rgb(0,0,1,1/4), xlim=c(-1000, 10000), breaks=500, ylim=c(0,800)) # czerwony
+hist(non_random_sample$dochg, col=rgb(1,0,0,1/4), xlim=c(-1000, 10000), breaks=500, ylim=c(0,800), add=TRUE)
+
+```
+Porównanie dochg_gr
+```{r}
+
+plot(random_sample$dochg_gr, col=rgb(0,0,1,1/4), ylim=c(0,5000)) # czerwony
+plot(non_random_sample$dochg_gr, col=rgb(1,0,0,1/4), ylim=c(0,5000), add=TRUE)
+
+```
+
+
+IPW
+```{r}
+
+ipw <- nonprob(selection = ~woj+klm+los,
+                    target = ~wydg,
+                    svydesign = jvs_svy,
+                    data = non_random_sample,
+                    method_selection = "logit")
+
+```
+
+MI
+```{r}
+
+mi <- nonprob(data = non_random_sample,
+                 outcome = wydg~woj+klm+los+dochg,
+                 svydesign = jvs_svy,
+                 method_outcome = "glm")
+
+```
+
+DR
+```{r}
+
+dr <- nonprob(data = non_random_sample,
+                 outcome = wydg~woj+klm+los,
+                 selection = ~ woj+klm+los,
+                 svydesign = jvs_svy,
+                 method_outcome = "glm")
+
+```
+
+
+```{r}
+
+dr
+mi
+ipw
+
+```
+Interakcje
+
+IPW
+```{r}
+
+ipw_int <- nonprob(selection = ~woj*klm*los+zut+d61,
+                    target = ~wydg,
+                    svydesign = jvs_svy,
+                    data = non_random_sample,
+                    method_selection = "logit")
+
+```
+
+MI
+```{r}
+
+mi_int <- nonprob(data = non_random_sample,
+                 outcome = wydg~dochg,
+                 svydesign = jvs_svy,
+                 method_outcome = "nn")
+
+```
+
+DR
+```{r}
+
+dr_int <- nonprob(data = non_random_sample,
+                 outcome = wydg~woj*klm*los+zut+d61,
+                 selection = ~ woj*klm*los+zut+d61,
+                 svydesign = jvs_svy,
+                 method_outcome = "glm")
+
+```
+
+
+```{r}
+
+dr_int
+mi_int
+ipw_int
+
+```
