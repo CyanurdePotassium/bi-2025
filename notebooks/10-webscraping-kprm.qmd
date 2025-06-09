@@ -12,6 +12,40 @@ execute:
   message: false
 ---
 
+# Rozgrzewka
+
+1. Wczytać `https://metal-api.dev/bands/184` do R / Python
+2. Zliczyć liczbę elementów w `albums`  
+
+# Ćwiczenie 1
+
+1. Nalezy wejść na stronę https://www.tvp.info/wybory-prezydenckie-2025
+2. Znaleźć w źródle strony / networku dane będące podstawą wizualizacji danych exit poll
+3. Wczytać je bezpośrednio do R/Python
+4. Prześledzić strukturę, gdzie znajdują się dane (poniżej już zformatowane, takich nie znajdziecie tam)
+
+```{r, echo=FALSE, result='asis'}
+poll_data <- data.frame(
+ demographic = c(rep("Education", 4), rep("Residence", 5), rep("Age", 5), rep("Gender", 2)),
+ category = c("Podstawowe", "Zasadnicze zawodowe", "Średnie i pomaturalne", "Licencjat i wyższe",
+              "Wieś", "Miasto do 50 tys.", "Miasto 50-200 tys.", "Miasto 200-500 tys.", "Miasto pow. 500 tys.",
+              "18-29 lat", "30-39 lat", "40-49 lat", "50-59 lat", "60 lat i więcej",
+              "Kobiety", "Mężczyźni"),
+ nawrocki = c(73.0, 69.8, 53.9, 39.0,
+              64.2, 48.7, 42.9, 34.7, 33.2,
+              53.2, 54.0, 47.9, 49.4, 51.0,
+              47.2, 55.5),
+ trzaskowski = c(27.0, 30.2, 46.1, 61.0,
+                 35.8, 51.3, 57.1, 65.3, 66.8,
+                 46.8, 46.0, 52.1, 50.6, 49.0,
+                 52.8, 44.5)
+)
+
+knitr::kable(poll_data)
+```
+
+# Ćwiczenie 2
+
 Cel:
 
 1.  Stworzenie programu, który pobierze 100 ofert pracy z portalu KPRM
