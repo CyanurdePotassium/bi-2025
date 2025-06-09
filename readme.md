@@ -16,7 +16,7 @@
     - [Masowa imputacja z wykorzystaniem najbliższych sąsiadów](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bi-2025/blob/main/notebooks/07-mi-nn.html)
     - [Masowa imputacja z wykorzystaniem GLM](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bi-2025/blob/main/notebooks/08-mi-glm.html)
 8.  [Metody podwójnie odporne](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bi-2025/blob/main/notebooks/09-dr.html)
-9.  Inne metody estymacji
+9.  [Własny web-scraper](https://htmlpreview.github.io/?https://github.com/DepartmentOfStatisticsPUE/bi-2025/blob/main/notebooks/10-webscraping-kprm.html)
 
 ## Projekt
 
