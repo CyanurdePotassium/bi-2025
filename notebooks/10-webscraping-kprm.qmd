@@ -1,0 +1,35 @@
+---
+title: "Własny web-scraper"
+format: 
+  html:
+    self-contained: true
+    table-of-contents: true
+    number-sections: true
+editor: source
+execute: 
+  eval: true
+  warning: false
+  message: false
+---
+
+Cel:
+
+1.  Stworzenie programu, który pobierze 100 ofert pracy z portalu KPRM
+    gov pl (https://nabory.kprm.gov.pl/wyniki-naborow)
+
+2.  Dla każdej oferty należy:
+
+    -   nr ogłoszenia
+    -   pobrać link
+    -   tytuł
+    -   urząd
+    -   miejscowość
+    -   datę publikacji
+
+![](figs/ogloszenie.png)
+
+3.  Następnie trzeba wejść w każde ogłoszenia i pobrać informacje
+    zaznaczone na czerwono
+
+![](figs/kprm-ogloszenie.png)
+
