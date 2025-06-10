@@ -1,0 +1,191 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+
+library(jsonlite)
+
+```
+
+Rozgrzewka
+
+Wczytanie json z metal-api
+```{r}
+
+link <- "https://metal-api.dev/bands/184"
+metal_json <- read_json(link)
+
+```
+
+Zliczenie elementów w album
+```{r}
+lengths(metal_json)
+
+```
+
+Ćwiczenie 2.
+
+1. Nalezy wejść na stronę https://www.tvp.info/wybory-prezydenckie-2025
+2. Znaleźć w źródle strony / networku dane będące podstawą wizualizacji danych exit poll
+3. Wczytać je bezpośrednio do R/Python
+4. Prześledzić strukturę, gdzie znajdują się dane (poniżej już zformatowane, takich nie znajdziecie tam)
+
+```{r}
+
+link_general <- "https://www.tvp.info/api/info/block?device=www&id=85815097"
+general_json <- read_json(link_general)
+
+```
+
+```{r}
+
+link_voivodeships <- "https://www.tvp.info/api/info/block?device=www&id=85816722"
+voivodeships_json <- read_json(link_voivodeships)
+
+```
+
+```{r}
+
+link_demographic <- "https://www.tvp.info/api/info/block?device=www&id=85815311"
+demographic_json <- read_json(link_demographic)
+
+```
+
+```{r}
+
+nawrocki_id <- 86916195
+trzaskowski_id <- 86916217
+
+```
+
+Wyniki ogólne
+```{r}
+
+general_json$data$items[[1]]$data
+
+```
+
+Ćwiczenie 3.
+
+1.  Stworzenie programu, który pobierze 100 ofert pracy z portalu KPRM
+    gov pl (https://nabory.kprm.gov.pl/wyniki-naborow)
+
+2.  Dla każdej oferty należy:
+    -   nr ogłoszenia
+    -   pobrać link
+    -   tytuł
+    -   urząd
+    -   miejscowość
+    -   datę publikacji
+    
+```{r}
+
+library(rvest)
+
+```
+
+```{r}
+
+kprm_link <- "https://nabory.kprm.gov.pl/wyniki-naborow?AdResult%5BpagesCnt%5D=100&AdResult%5BisAdvancedMode%5D=&AdResult%5Bsort%5D=1&AdResult%5Bid%5D=&AdResult%5Bid_institution%5D=&AdResult%5Bid_institution_position%5D=&search-button="
+
+```
+
+
+```{r}
+
+doc <- read_html(kprm_link)
+
+```
+
+Numery ogłoszeń
+```{r}
+
+doc |> 
+  html_nodes("div.row") |>
+  html_nodes("span.id") |>
+  html_text() -> numbers
+
+numbers <- sapply(numbers, \(x) substr(x, 4, 9))
+head(numbers, 5)
+
+```
+
+Linki ogłoszeń
+```{r}
+
+#//*[@id="searchResults"]/div[2]/ul/li[1]
+
+doc |> 
+  html_nodes("div.row") |>
+  html_nodes("a.single") |>
+  html_attr("href") -> links
+
+head(links, 5)
+
+```
+
+Tytuły
+```{r}
+
+doc |> 
+  html_nodes("div.row") |>
+  html_nodes("strong.title") |>
+  html_text() -> titles
+
+head(titles, 5)
+
+```
+
+Urzędy, miejscowości i daty
+```{r}
+
+doc |> 
+  html_nodes("div.row") |>
+  html_nodes("div.r") |>
+  html_nodes("b") |>
+  html_text() -> data_to_process
+
+head(data_to_process, 6)
+
+```
+
+```{r}
+
+departments <- data_to_process[seq(from=1, to=length(data_to_process)-2, by=3)]
+head(departments, 5)
+
+cities <- data_to_process[seq(from=2, to=length(data_to_process)-1, by=3)]
+head(cities, 5)
+
+dates <- data_to_process[seq(from=3, to=length(data_to_process), by=3)]
+head(dates, 5)
+
+```
+
+Połączenie danych
+```{r}
+
+df <- data.frame(
+  Number=numbers,
+  Link=links,
+  Title=titles,
+  Department=departments,
+  City=cities,
+  Date=dates
+)
+
+View(df)
+
+```
+
+Pętla po ogłoszeniach, żeby ściągnąć dane ze stron ogłoszeń
+```{r}
+
+
+
+```
+
+
+
